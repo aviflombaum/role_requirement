@@ -1,6 +1,7 @@
 require( File.join( File.dirname(__FILE__), "../role_generator_helpers" ))
 
 class RolesGenerator < Rails::Generator::NamedBase
+  default_options :skip_migration => false
   
   include RoleGeneratorHelpers
   
@@ -17,7 +18,6 @@ class RolesGenerator < Rails::Generator::NamedBase
       puts "Expected: script/generate roles [Role] [User]"
       exit
     end
-    
     @roles_model_name = (runtime_args[0] || "Role").classify
     @users_model_name = (runtime_args[1] || "User").classify
     @roles_table_name = @roles_model_name.tableize
@@ -118,4 +118,10 @@ class RolesGenerator < Rails::Generator::NamedBase
       "Usage: #{$0} roles RoleModelName [TargetUserModelName]"
     end
 
+    def add_options!(opt)
+      opt.separator ''
+      opt.separator 'Options:'
+      opt.on("--skip-migration",
+        "Don't generate a migration file for this model")           { |v| options[:skip_migration] = v }
+    end
 end
